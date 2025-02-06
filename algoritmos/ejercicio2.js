@@ -2,14 +2,17 @@
 
 //creamos la función que invertirá un string dado
 function invertirString(string) {
-    string.split('').reverse().join('')
+    return string.split('').reverse().join('')
 }
 
 //creamos una variable que almacene el pompt del usuario:
 let stringPrompt = prompt("Dime una frase y te la digo al revés");
+console.log(stringPrompt, typeof(stringPrompt));
 
 //creamos la variable a llamar para ejecutar la función y pasarle el prompt
 let frase = invertirString(stringPrompt);
+console.log(frase);
+
 
 //pasamos una verificación mínima: el campo no puede estar vacío
 if (stringPrompt === "") {
