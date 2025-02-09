@@ -1,4 +1,4 @@
-// 1Crear un algoritmo que sume todos los números de un array.
+// 13 - Crear un algoritmo que sume todos los números de un array.
 
 //definimos un array y lo mostramos en consola
 const array = [32, 86849, 4950, 394, 293, 3, 5, 12, 98, -543, 0, 3.4, -8];
@@ -10,7 +10,7 @@ const sumWithInitial = array.reduce(
   (accumulator, currentValue) => accumulator + currentValue,
   initialValue,
 );
-console.log(sumWithInitial);
+console.log("Esta es la suma usando REDUCE:", sumWithInitial);
 
 //Opción 2: probando con FOR
 
@@ -31,4 +31,4 @@ for (let i = 0; i < array.length; i++) {//i <= array.length -1
     
 }
 
-console.log(suma);
+console.log("Esta es la suma usando FOR:", suma);
