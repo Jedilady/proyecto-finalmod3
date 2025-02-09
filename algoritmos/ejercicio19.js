@@ -37,7 +37,7 @@ function getCentury(year) {
     } else if (year === 0) {
         alert("El año cero no existe en nuestro calendario");        
     } else {
-        //pasamos a consola que algo ha ido mal, como que fue un año incorrecto el parámetro pasado a esta función
+        //pasamos a consola que algo ha ido mal
         console.log("Algo no ha ido bien. Vuelve a intentar");
     }
 }
