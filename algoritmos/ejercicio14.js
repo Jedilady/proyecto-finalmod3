@@ -19,16 +19,26 @@ function processedWord(string) {
 
 //Creando la función comparativa
 function checkAnagramas(stringA, stringB) {
+
+    //prevenimos que si el usario da click en cancelar, nos de error
+    if (stringA == null || stringB == null) {
+        return alert(`No puedes dejar campos vacíos`)
+    }
+
+    //verificamos que el usuario no ingresó palabras en el mismo orden de letras
     if (stringA.toLowerCase().trim() === stringB.toLowerCase().trim()) {
         return alert(`${stringA} y ${stringB} no pueden tener el mismo orden de letras. Vuelve a intenterlo`);
     }
 
+    //verificamos que no ingrese números
     if (!isNaN(stringA) || !isNaN(stringB)) {
         return alert(`Los números no cuentan ;) Vuelve a interntarlo`)
     }
 
+    //declaramos las constantes a las que les pasaremos la función simplificadora
     let a = processedWord(stringA);
     let b = processedWord(stringB);
+    //creamos el return con un ternario
     return (a === b ? alert(`¡Eureka! ${stringA} y ${stringB} son anagramas!`) : alert(`${stringA} y ${stringB} no son anagramas`));
 }
 
