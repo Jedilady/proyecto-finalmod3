@@ -21,6 +21,9 @@ function getYear() {
 //creamos la función que calcula el sigo
 function getCentury(year) {
 
+    // Evita ejecutar si la entrada fue inválida
+    if (year === null) return; 
+
     //variable para almacenar el siglo
     let century;
 
