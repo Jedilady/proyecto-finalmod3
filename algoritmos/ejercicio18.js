@@ -81,3 +81,9 @@ function leetSpeakWhile(phrase) {
 leetSpeakWhile(check);
 
 
+//Alternativa encontrada investigando en red:
+/*
+for (const element of palabra) {
+    newString += leetObject[element] ?? element;
+}
+    */
