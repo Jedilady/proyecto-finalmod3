@@ -34,7 +34,7 @@ function leetSpeakForOf(phrase) {
         //console.log(leetObject[element]);
         //console.log(leetObject[key]);
 
-        if (leetObject[element] !== undefined || element === leetObject[element]) {
+        if (leetObject[element] !== undefined) {
             newString += leetObject[element]
         } 
         else {
@@ -81,7 +81,7 @@ function leetSpeakWhile(phrase) {
 leetSpeakWhile(check);
 
 
-//Alternativa encontrada investigando en red:
+//Alternativa encontrada investigando en red. Para revisar a futuro porque no la entiendo :(
 /*
 for (const element of palabra) {
     newString += leetObject[element] ?? element;
