@@ -8,8 +8,23 @@
   </head>
   <body>
     <main>
-      <h1>Lista de Productos</h1>
-      <div id="productos"></div>
+      <section id="products-list">
+        <h1>Lista de Productos</h1>
+        <div id="productos"></div>
+      </section>
+      
+      <section id="products-add-new">
+        <h2>Agregar/Editar Producto</h2>
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+          <input type="text" id="title" placeholder="Nombre del Producto" required>
+          <input type="number" id="price" placeholder="Precio" required>
+          <input type="text" id="image" placeholder="URL de la imagen" required>
+          <textarea id="description" placeholder="Descripción" required></textarea>
+          <button type="submit">Guardar</button>
+        </form>
+      </section>
+      
     </main>
     <script type="module" src="/src/css/style.css"></script>
     <script src="./src/main.js"></script>
