@@ -9,13 +9,15 @@ console.log(`Este es nuestro array de prueba:`, arrayModelo);
 //Set no permite duplicados, así que se lo pasamos al array
 //hay que usar el spread operator (...) para crear el nuevo array sin afectar al original
 const uniqueArray = [...new Set(arrayModelo)];
-console.log(uniqueArray); 
+console.log(`Y este es nuestro array filtrado con Set:`,uniqueArray); 
 
+/* PENDIENTE
 //Segunda solución: usamos la combinación de métodos "filter" + "indexOf"
 //creamos la función 
 function filterArray(array){
 
 }
+*/
 
 //NOTA
 //Luego de haber revisado en internet y encontral el modo filter + indexOf, conseguí este enlace con un montón de posibilidades

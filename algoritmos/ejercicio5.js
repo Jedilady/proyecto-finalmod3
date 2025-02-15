@@ -7,7 +7,7 @@
 // 3 - toDo: eliminar acentos. Lo obviaremos por ahora por las complicaciones
 
 //Como siempre, creamos la constante que almacenará el resultado del prompt:
-const fraseOriginal = prompt("Dime una frase y te digo si es un palíndromo (sin acentos)");
+const fraseOriginal = prompt("Dime una frase (sin acentos) y te digo si es un palíndromo: ");
 
 //limpiamos con trim y toLowerCase
 //Quitamos los espacios con .replace(/\s+/g, '')

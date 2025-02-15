@@ -1,7 +1,7 @@
 // 4 - Crear un algoritmo que devuelva el factorial de un número.
 
 //creamos la variable que almacena el numero obtenido por un prompt
-let baseNumber = prompt("Dime un numero entero positivo");
+let baseNumber = prompt("Dime un numero entero positivo, y te digo su factorial:");
 
 //creamos una función para el cálculo del factorial
 // usamos un for para el cálculo, donde multiplicamos n * n-1 * n-2... etc
