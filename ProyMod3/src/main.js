@@ -82,6 +82,40 @@ async function fetchProducts(expirationDays = 2) {
      
 }
 
+// ------------------------ EDIT -------------------------- //
+
+// Función PUT
+// La llamaremos desde la función AUX para mostrar productos en el DOM
+async function updateProduct(productData, id) {
+    const url = `${API_PRODUCTS}/${id}`;
+    console.log("update");
+    
+  
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Request failure", response.status);
+      }
+  
+      const result = await response.json();
+      console.log("Updated product: ", result);
+
+      alert("Producto actualizado exitosamente");
+
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+}
+
+// ------------ AUX para MOSTRAR los productos ------------------- //
+
 //Funcion AUX para mostrar productos en el DOM
 
 function displayEachProduct(products) {
@@ -126,20 +160,92 @@ function displayEachProduct(products) {
             </div>
             <span class="card-description">${productItem.description}</span>
             <div class="card-buttons">
-                <button class="bt-m" onclick="editProduct(${productItem.id})">Editar</button>    
+                <button id="product-update-bt-${productItem.id}" class="bt-m product-update">Editar</button>    
                 <button class="bt-m bt-alert" onclick="deleteProduct(${productItem.id})">Eliminar</button>    
             </div>
+            <form id="product-update-form-${productItem.id}" class="product-card-form" style="display: none">
+                <input type="hidden" id="product-id-${productItem.id}">
+                <label for="product-title">Product name
+                    <input type="text" name="product-title" id="product-form-title-${productItem.id}" required>
+                </label>
+                <label for="product-price">Price
+                    <input type="number" name="produc-price" id="product-form-price-${productItem.id}" required>
+                </label>
+                <label for="product-caegory">Category
+                    <input type="text" id="product-form-category-${productItem.id}" required>
+                </label>
+                <label for="product-image">Image URL
+                    <input type="text" id="product-form-image-${productItem.id}" required>
+                </label>
+                <label for="product-description">Description
+                    <textarea id="product-form-description-${productItem.id}" required></textarea>
+                </label>
+                <div class="form-bts">
+                    <button type="submit" class="bt-m">Save</button>
+                    <button id="cancel-update-${productItem.id}" type="button" class="bt-m bt-alert">Cancel</button>
+                </div>
+            </form>
         `;
-        //<button onclick="eliminarProducto(${productItem.id})">Eliminar</button> 
+        // onclick="updateProduct(${productItem.id})"
 
         //indicamos en dónde se va a insertar cada nuevo DIV
         contenedorProductos.appendChild(productElement);
 
         //console.log(productItem.rating.rate);
         //console.log(productItem.rating["rate"]);
+
+        //abrir el form y hacer put
+        //crear constantes de referencia
+        const updateBtn = document.getElementById(`product-update-bt-${productItem.id}`);
+        const form = document.getElementById(`product-update-form-${productItem.id}`);
+        const cancelBtn = document.getElementById(`cancel-update-${productItem.id}`);
+        //console.log(form);
+        const pId = productItem.id;
+    
+        // Mostrar formulario al hacer clic en "Editar"
+        updateBtn.addEventListener("click", () => {
+            form.reset();
+            form.style.display = "grid";
+            //updateProduct(productData, pId);
+        }); 
+
+        // Evento para cerrar el formulario con "Cancel"
+        cancelBtn.addEventListener("click", () => {
+            if (confirm("¿Seguro que deseas cancelar? Se perderán los cambios.")) {
+                form.style.display = "none";
+            }
+        });
+
+        // Función para manejar la actualización
+        const updateHandler = async (e) => {
+            e.preventDefault();
+            
+            const productData = {
+                id: pId,
+                title: form.querySelector(`#product-form-title-${pId}`).value,
+                price: parseFloat(form.querySelector(`#product-form-price-${pId}`).value),
+                description: form.querySelector(`#product-form-description-${pId}`).value,
+                image: form.querySelector(`#product-form-image-${pId}`).value,
+                category: form.querySelector(`#product-form-category-${pId}`).value
+            };
         
+            await updateProduct(productData, pId);
+
+            // Ocultamos el form tras actualizar
+            form.style.display = "none"; 
+        
+            //form.reset();
+            //fetchProducts();
+            };
+
+             // Evitar múltiples eventos de submit
+            form.removeEventListener("submit", updateHandler);
+            form.addEventListener("submit", updateHandler);
+
     });
 }
+
+
 
 //---------------------ELIMINAR PRODUCTO-------------------------//
 
@@ -197,7 +303,7 @@ function removeProductFromDOM(id) {
 }
 
 
-//------------------- CREAR y EDITAR PRODUCTO ---------------------//
+//------------------- CREAR PRODUCTO ---------------------//
 
 // Función POST
 // La llamaremos desde la función AUX CREAR que se inicia con el evento de creación
@@ -220,82 +326,16 @@ async function createProduct(productData) {
   
       const result = await response.json();
       console.log("Created product:", result);
-      
-      // Agregar al caché
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      if (cachedData) {
-          let { timestamp, data } = JSON.parse(cachedData);
 
-          // Agregamos el nuevo producto con push
-          data.push(newProduct); 
+      alert("Producto creado exitosamente");
 
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data }));
-      } else {
-          // Si no hay caché, crear uno nuevo con el producto
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: [newProduct] }));
-      }
-
-      // Mostrar el producto en el DOM
-      displayEachProduct([...data, newProduct]);
 
     } catch (error) {
       console.error("Error creating product:", error);
     }
 }
 
-// Función PUT
-// La llamaremos desde la función AUX EDICION que se inicia con el evento de edición
-async function updateProduct(productData, id) {
-    const url = `${API_PRODUCTS}/${id}`;
-  
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productData),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Request failure", response.status);
-      }
-  
-      const result = await response.json();
-      console.log("Updated product: ", result);
-
-    // Obtener caché de productos
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    if (cachedData) {
-        let { timestamp, data } = JSON.parse(cachedData);
-
-        // Buscar si el producto ya existe en el caché
-        const index = data.findIndex(product => product.id === newProduct.id);
-
-        if (index !== -1) {
-            // Si el producto existe, actualizarlo
-            data[index] = newProduct;
-        } else {
-            // Si no existe, agregarlo
-            data.push(newProduct);
-        }
-
-        // Guardar los datos actualizados en localStorage
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data }));
-    } else {
-        // Si no hay caché, crear uno nuevo con el producto
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: [newProduct] }));
-    }
-
-    // Mostrar el producto actualizado en el DOM
-    displayEachProduct();
-
-    } catch (error) {
-      console.error("Error updating product:", error);
-    }
-}
-
-//Función AUX POST + PUT (Crear y Editar productos)
+//Función AUX POST 
 productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -308,16 +348,42 @@ productForm.addEventListener('submit', async (e) => {
         category: productInputCategory.value
     };
 
+    /*Esto ya no hace falta
     //si el ID existe, llamamos a la función EDITAR, si no a la funcion CREAR
     if (id) {
         await updateProduct(id, productData);
     } else {
         await createProduct(productData);
     }
+    */
+    await createProduct(productData);
 
     productForm.reset();
     fetchProducts();
 });
+
+
+//Función para mostrar el form
+document.addEventListener("DOMContentLoaded", () => {
+    const addNewBtn = document.getElementById("add-new-bt");
+    const cancelBtn = document.querySelector("#product-form button[type='button']");
+    const formSection = document.getElementById("products-add-new");
+    const form = document.getElementById("product-form");
+
+    // Muestra el formulario al hacer clic en "Add new"
+    addNewBtn.addEventListener("click", () => {
+        form.reset(); // Limpiar formulario antes de abrirlo
+        formSection.style.display = "block";
+    });
+
+    // Oculta el formulario al hacer clic en "Cancel"
+    cancelBtn.addEventListener("click", () => {
+        if (confirm("¿Seguro que deseas cancelar? Se perderán los cambios.")) {
+            formSection.style.display = "none";
+        }
+    });
+});
+
 
 //------------------ CACHE -------------------------//
 
@@ -348,16 +414,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Llamamos a la función al cargar la página
 document.addEventListener("DOMContentLoaded", () => fetchProducts());
-
-
-/*
-constantes del DOM:
-productsList = document.getElementById('products-list');
-productForm = document.getElementById('product-form');
-productInputTitle = document.getElementById('product-form-title');
-productInputPrice = document.getElementById('product-form-price');
-productImage = document.getElementById('product-form-image');
-productInputDescription = document.getElementById('product-form-description');
-productInputCategory = document.getElementById('product-form-category');
-productIdInput = document.getElementById('product-id');
-*/
