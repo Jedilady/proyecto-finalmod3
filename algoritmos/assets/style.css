@@ -1,0 +1,58 @@
+/* resets*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    font-size: 100%;
+    line-height: 1.5;
+    font-family: sans-serif;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  
+  ul,
+  ol {
+    list-style: none;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  body {
+    margin: 1rem;
+    text-align: center;
+  }
+
+  .links {
+    margin: 5rem auto;
+    text-align: center;
+  }
+
+  .links a {
+    padding: 0.5rem 1.5rem;
+    background-color: rgb(219, 219, 219);
+    border-radius: 4px;
+    margin: 2rem;
+  }
+
+  .links a:hover {
+    background-color: aquamarine;
+  }
+  
