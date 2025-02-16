@@ -21,6 +21,8 @@ function getYear() {
 //creamos la función que calcula el sigo
 function getCentury(year) {
 
+    year = getYear();
+
     // Evita ejecutar si la entrada fue inválida
     if (year === null) return; 
 
@@ -43,4 +45,4 @@ function getCentury(year) {
 }
 
 //llamamos a ambas funciones:
-getCentury(getYear())
+getCentury()
