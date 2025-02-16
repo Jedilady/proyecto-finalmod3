@@ -161,7 +161,7 @@ function displayEachProduct(products) {
             <span class="card-description">${productItem.description}</span>
             <div class="card-buttons">
                 <button id="product-update-bt-${productItem.id}" class="bt-m product-update">Editar</button>    
-                <button class="bt-m bt-alert" onclick="deleteProduct(${productItem.id})">Eliminar</button>    
+                <button id="product-delete-bt-${productItem.id}" class="bt-m bt-alert">Eliminar</button>    
             </div>
             <form id="product-update-form-${productItem.id}" class="product-card-form" style="display: none">
                 <input type="hidden" id="product-id-${productItem.id}">
@@ -193,6 +193,15 @@ function displayEachProduct(products) {
 
         //console.log(productItem.rating.rate);
         //console.log(productItem.rating["rate"]);
+
+        //confirmar la eliminación de un producto:
+        const deleteProductBt = document.getElementById(`product-delete-bt-${productItem.id}`);
+        deleteProductBt.addEventListener("click", () => {
+            if (confirm(`¿Seguro que deseas eliminar este producto?\n ${productItem.title} \n No se puede deshacer`)) {
+                deleteProduct(productItem.id);
+            }
+        })
+        
 
         //abrir el form y hacer put
         //crear constantes de referencia
