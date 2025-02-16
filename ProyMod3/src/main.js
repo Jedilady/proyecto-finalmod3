@@ -108,13 +108,27 @@ function displayEachProduct(products) {
 
         //creamos el HTML que llevará el div "productCard" por dentro
         productElement.innerHTML = `
-            <h2>${productItem.title}</h2>
-            <img src="${productItem.image}" width="100">
-            <p class="description">Descripción del producto: ${productItem.description}</p>
-            <span class="rating">Calificación de los usuarios: ${productItem.rating.rate} (basado en ${productItem.rating.count} opiniones)</span>
-            <span class="price">Precio: $${productItem.price}</span>
-            <p class="category">Categoria: ${productItem.category}</p>
-            <button onclick="deleteProduct(${productItem.id})">Eliminar</button>    
+            <div class="card-main">
+                <div class="image">
+                    <img src="${productItem.image}">
+                </div>
+                <div class="card-info">
+                    <div class="card-text">
+                        <h2>${productItem.title}</h2>
+                        <span class="category">${productItem.category}</span>
+                    </div>
+                    <div class="rating">
+                        <span class="rating-rate">${productItem.rating.rate}</span>
+                        <span class="rating-count">${productItem.rating.count} reviews</span>
+                    </div>
+                    <span class="price">$${productItem.price}</span>
+                </div>
+            </div>
+            <span class="card-description">${productItem.description}</span>
+            <div class="card-buttons">
+                <button class="bt-m" onclick="editProduct(${productItem.id})">Editar</button>    
+                <button class="bt-m bt-alert" onclick="deleteProduct(${productItem.id})">Eliminar</button>    
+            </div>
         `;
         //<button onclick="eliminarProducto(${productItem.id})">Eliminar</button> 
 
