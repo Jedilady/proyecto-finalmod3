@@ -29,6 +29,10 @@ textarea {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 ul,
 ol {
   list-style: none;
@@ -47,6 +51,8 @@ body {
 
 main {
   padding: 32px;
+  margin: 0 auto;
+  max-width: 1800px;
 }
 
 /* --- h-text --- */
@@ -57,6 +63,7 @@ h1 {
 }
 
 /* --- buttons --- */
+
 .bt-xl {
   background-color: #E8E1EF;
   font-size: 1.5rem;
@@ -64,6 +71,11 @@ h1 {
   border-radius: 4px;
   padding: 0.5rem 1rem;
   font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+@media screen and (max-width: 600px){
+  .bt-xl {font-size: 1.2rem;}
 }
 
 .bt-m {
@@ -73,6 +85,7 @@ h1 {
   border-radius: 4px;
   padding: 0.5rem 1rem;
   font-weight: 400;
+  transition: all 0.2s ease;
 }
 
 .bt-alert {
@@ -81,18 +94,28 @@ h1 {
 
 .bt-xl:hover, .bt-m:hover {
   background-color: #EBB9DF;
+  transition: all 0.2s ease;
+}
+
+.bt-alert:hover {
+  background-color: #F1DABF;
 }
 
 /* --- specific styles -- */
 
 header {
+  display: flex;
+  gap: 1rem;
   background-color: #F4F4F6;
   font-size: 1.5rem;
   font-weight: 600;
   padding: 2.5rem 2rem 2rem 2rem;
-  display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  header {font-size: 1.2rem;}
 }
 
 /* --- products --- */
@@ -112,6 +135,13 @@ header {
   text-align: left;
   border-radius: 0.5rem;
   background-color: #fff;
+  transition: transform, border-color, 0.2s ease;
+}
+
+.product-card:hover {
+  border-color: #447604;
+  transform: scale(1.025);
+  transition: transform, border-color, 0.3s;
 }
 
 @media screen and (min-width: 700px) {
@@ -213,107 +243,64 @@ header {
   align-self: end;
 }
 
-button {
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-
-/*
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
+/* --- Products FORM --- */
+#products-add-new {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  max-width: 440px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  border: 1px solid #E8E1EF;
+  border-radius: 3px;
+  padding: 1rem;
+  background-color: #ffffff;
+} 
+
+#products-add-new h2 {
+  font-weight: 400;
+  font-size: 1.2rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+#products-add-new form {
+  display: grid;
+  width: 100%;
 }
 
-.card {
-  padding: 2em;
+#products-add-new form label{
+font-size: 0.75rem;
 }
 
-.read-the-docs {
-  color: #888;
+#products-add-new form input,
+#products-add-new form textarea{
+  margin: 2px 0 0.5rem;
+  padding: 0.25rem;
+  width: 100%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+#products-add-new form input{
+  height: 1.75rem;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+#products-add-new form textarea{
+  height: 4rem;
 }
-*/
+
+/* --- Cahe --- */
+
+.cache-reset {
+  padding: 0.5rem 3rem;
+  text-align: right;
+}
+
+.cache-reset .cache-reset-bt {
+  font-size: 0.75rem;
+  border: none;
+  background-color: #F4F4F6;
+  padding: 0.25rem 0.5rem;
+}
+
+.cache-reset .cache-reset-bt:hover {
+  background-color:#F1DABF;
+}

@@ -9,27 +9,38 @@
   <body>
     <header>
       <span>Products dashboard</span>
-      <button type="button" class="bt-xl">Add new</button>
+      <button type="button" id="add-new-bt" class="bt-xl">Add new</button>
     </header>
     <main>
+      <section id="products-add-new">
+        <h2>Add or edit product</h2>
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+          <label for="product-title">Product name
+            <input type="text" name="product-title" id="product-form-title" required>
+          </label>
+          <label for="product-price">Price
+            <input type="number" name="produc-price" id="product-form-price" required>
+          </label>
+          <label for="product-caegory">Category
+            <input type="text" id="product-form-category" required>
+          </label>
+          <label for="product-image">Image URL
+            <input type="text" id="product-form-image" required>
+          </label>
+          <label for="product-descriptio">Description
+            <textarea id="product-form-description" required></textarea>
+          </label>
+          <div class="form-bts">
+            <button type="submit" class="bt-m">Save</button>
+            <button type="button" class="bt-m bt-alert">Cancel</button>
+          </div>
+        </form>
+      </section>
       <section id="products-list">
         <h1>Products list</h1>
         <div id="productos"></div>
       </section>
-      
-      <section id="products-add-new">
-        <h2>Agregar/Editar Producto</h2>
-        <form id="product-form">
-          <input type="hidden" id="product-id">
-          <input type="text" id="product-form-title" placeholder="Nombre del Producto" required>
-          <input type="number" id="product-form-price" placeholder="Precio" required>
-          <input type="text" id="product-form-category" placeholder="Categoría" required>
-          <input type="text" id="product-form-image" placeholder="URL de la imagen" required>
-          <textarea id="product-form-description" placeholder="Descripción" required></textarea>
-          <button type="submit">Guardar</button>
-        </form>
-      </section>
-      
     </main>
     <script type="module" src="/src/css/style.css"></script>
     <script src="./src/main.js"></script>

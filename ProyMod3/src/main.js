@@ -220,7 +220,24 @@ async function createProduct(productData) {
   
       const result = await response.json();
       console.log("Created product:", result);
-      //addProductToDOM(result);
+      
+      // Agregar al caché
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+          let { timestamp, data } = JSON.parse(cachedData);
+
+          // Agregamos el nuevo producto con push
+          data.push(newProduct); 
+
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data }));
+      } else {
+          // Si no hay caché, crear uno nuevo con el producto
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: [newProduct] }));
+      }
+
+      // Mostrar el producto en el DOM
+      displayEachProduct([...data, newProduct]);
+
     } catch (error) {
       console.error("Error creating product:", error);
     }
@@ -246,6 +263,33 @@ async function updateProduct(productData, id) {
   
       const result = await response.json();
       console.log("Updated product: ", result);
+
+    // Obtener caché de productos
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+        let { timestamp, data } = JSON.parse(cachedData);
+
+        // Buscar si el producto ya existe en el caché
+        const index = data.findIndex(product => product.id === newProduct.id);
+
+        if (index !== -1) {
+            // Si el producto existe, actualizarlo
+            data[index] = newProduct;
+        } else {
+            // Si no existe, agregarlo
+            data.push(newProduct);
+        }
+
+        // Guardar los datos actualizados en localStorage
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data }));
+    } else {
+        // Si no hay caché, crear uno nuevo con el producto
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: [newProduct] }));
+    }
+
+    // Mostrar el producto actualizado en el DOM
+    displayEachProduct();
+
     } catch (error) {
       console.error("Error updating product:", error);
     }
@@ -289,9 +333,15 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
 
     const btnRestaurar = document.createElement("button");
-    btnRestaurar.textContent = "Restaurar Caché";
+    btnRestaurar.classList.add("cache-reset-bt");
+    btnRestaurar.textContent = "Restore Cache";
     btnRestaurar.onclick = restaurarCache;
-    document.body.appendChild(btnRestaurar);
+    //document.body.appendChild(btnRestaurar);
+
+    const divRestaurar = document.createElement("div");
+    divRestaurar .classList.add("cache-reset");
+    document.body.appendChild(divRestaurar);
+    divRestaurar.appendChild(btnRestaurar);
 });
 
 
