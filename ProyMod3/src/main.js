@@ -13,11 +13,13 @@ const CACHE_KEY = "fakeStoreProducts";
 // LLAMADAS AL DOM
 const productsList = document.getElementById('products-list');
 const productForm = document.getElementById('product-form');
-const titleInput = document.getElementById('title');
-const priceInput = document.getElementById('price');
-const imageInput = document.getElementById('image');
-const descriptionInput = document.getElementById('description');
+const productInputTitle = document.getElementById('product-form-title');
+const productInputPrice = document.getElementById('product-form-price');
+const productImage = document.getElementById('product-form-image');
+const productInputDescription = document.getElementById('product-form-description');
+const productInputCategory = document.getElementById('product-form-category');
 const productIdInput = document.getElementById('product-id');
+
 
 //------------------- GET PRODUCTS ---------------------//
 
@@ -180,8 +182,86 @@ function removeProductFromDOM(id) {
     }
 }
 
-//------------------- CREAR PRODUCTO ---------------------//
 
+//------------------- CREAR y EDITAR PRODUCTO ---------------------//
+
+// Función POST
+// La llamaremos desde la función AUX CREAR que se inicia con el evento de creación
+async function createProduct(productData) {
+  
+    try {
+      const response = await fetch(API_PRODUCTS, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Request failure", response.status);
+      }
+  
+      console.log(response.status);
+  
+      const result = await response.json();
+      console.log("Created product:", result);
+      //addProductToDOM(result);
+    } catch (error) {
+      console.error("Error creating product:", error);
+    }
+}
+
+// Función PUT
+// La llamaremos desde la función AUX EDICION que se inicia con el evento de edición
+async function updateProduct(productData, id) {
+    const url = `${API_PRODUCTS}/${id}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Request failure", response.status);
+      }
+  
+      const result = await response.json();
+      console.log("Updated product: ", result);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+}
+
+//Función AUX POST + PUT (Crear y Editar productos)
+productForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = productIdInput.value;
+    const productData = {
+        title: productInputTitle.value,
+        price: parseFloat(productInputPrice.value),//parseFloat para enviar un numero y no un string
+        description: productInputDescription.value,
+        image: productImage.value,
+        category: productInputCategory.value
+    };
+
+    //si el ID existe, llamamos a la función EDITAR, si no a la funcion CREAR
+    if (id) {
+        await updateProduct(id, productData);
+    } else {
+        await createProduct(productData);
+    }
+
+    productForm.reset();
+    fetchProducts();
+});
+
+//------------------ CACHE -------------------------//
 
 // Función para restaurar caché
 function restaurarCache() {
@@ -204,3 +284,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Llamamos a la función al cargar la página
 document.addEventListener("DOMContentLoaded", () => fetchProducts());
+
+
+/*
+constantes del DOM:
+productsList = document.getElementById('products-list');
+productForm = document.getElementById('product-form');
+productInputTitle = document.getElementById('product-form-title');
+productInputPrice = document.getElementById('product-form-price');
+productImage = document.getElementById('product-form-image');
+productInputDescription = document.getElementById('product-form-description');
+productInputCategory = document.getElementById('product-form-category');
+productIdInput = document.getElementById('product-id');
+*/
