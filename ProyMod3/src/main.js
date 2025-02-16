@@ -1,36 +1,86 @@
 //import './css/style.css'
 
-const API_BASE_URL = "https://fakestoreapi.com";
+//------- CONSTANTES generales --------------//
 
+//API base
+const API_BASE_URL = "https://fakestoreapi.com";
+//API/products
 const API_PRODUCTS = `${API_BASE_URL}/products`
 
-// Función para obtener productos
-async function obtenerProductos() {
+//constate "key" para el cache
+const CACHE_KEY = "fakeStoreProducts";
 
-    const url = API_PRODUCTS;//linea redundante
+// LLAMADAS AL DOM
+const productsList = document.getElementById('products-list');
+const productForm = document.getElementById('product-form');
+const titleInput = document.getElementById('title');
+const priceInput = document.getElementById('price');
+const imageInput = document.getElementById('image');
+const descriptionInput = document.getElementById('description');
+const productIdInput = document.getElementById('product-id');
 
+//------------------- GET PRODUCTS ---------------------//
+
+// Función GET para obtener productos
+async function fetchProducts(expirationDays = 2) {
+
+    // Creamos las constantes que manejarán el caché, 
+    // primero la key, y luego dónde se almacenará
+    //const cacheKey = "fakeStoreProducts";
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    
+    // creamos el if que revisa hay data en caché o no
+    if (cachedData) {
+        const { timestamp, data } = JSON.parse(cachedData);
+        const now = new Date().getTime();
+        
+        // Si los datos no han expirado, devolver desde caché
+        if (now - timestamp < expirationDays * 24 * 60 * 60 * 1000) {
+            console.log("Usando datos en caché");
+            // llamamos a la función que carga y muestra los productos en HTML
+            displayEachProduct(data);
+            // Ver en consola los productos
+            console.log(data);
+            // detenemos con un return
+            return data;
+        }
+    }
+
+    // si los datos expiraron, o es el primer acceso, hacemos FETCH
+    
+    // FETCH
     try {
-        const response = await fetch(url);
+        const response = await fetch(API_PRODUCTS);
 
-        //en caso de error, saber el status
+        // en caso de error, saber el status
         if (!response.ok) {
             throw new Error("Error al obtener el recurso:", response.status);
         }
 
+        //ver en consola la respuesta
         console.log(response.status);
         
         const productsList = await response.json();
 
-        //llamamos a la función que carga y muestra los productos en HTML
-        displayEachProduct(productsList);
+        // Guardar en CACHE con la fecha actual
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: productsList }));
 
-        console.log(productsList); // Ver en consola los productos
+        // llamamos a la función que carga y muestra los productos en HTML
+        displayEachProduct(productsList);
+        // Ver en consola los productos
+        console.log(productsList); 
+
+        // detenemos con un return
+        return productsList;
+        
     } catch (error) {
         console.error("Error al obtener productos:", error);
     }
+
+     
 }
 
-//Función para mostrar todos los PRODUCTOS
+//Funcion AUX para mostrar productos en el DOM
 
 function displayEachProduct(products) {
 
@@ -48,19 +98,24 @@ function displayEachProduct(products) {
         //cada iteración debe tener su propia variable
         const productElement = document.createElement("div");
 
-        //le asignamos un id
-        productElement.id = 'productCard';
+        //le damos una clase para manejar el css
+        productElement.classList.add("product-card");
+        
+        //le asignamos un id asociado a cada producto
+        productElement.id = `product-${productItem.id}`;
 
-        //creamos el HTML que llevará el ID por dentro
+        //creamos el HTML que llevará el div "productCard" por dentro
         productElement.innerHTML = `
             <h2>${productItem.title}</h2>
             <img src="${productItem.image}" width="100">
             <p class="description">Descripción del producto: ${productItem.description}</p>
             <span class="rating">Calificación de los usuarios: ${productItem.rating.rate} (basado en ${productItem.rating.count} opiniones)</span>
             <span class="price">Precio: $${productItem.price}</span>
-            <p class="category"></p>  
+            <p class="category">Categoria: ${productItem.category}</p>
+            <button onclick="deleteProduct(${productItem.id})">Eliminar</button>    
         `;
-        
+        //<button onclick="eliminarProducto(${productItem.id})">Eliminar</button> 
+
         //indicamos en dónde se va a insertar cada nuevo DIV
         contenedorProductos.appendChild(productElement);
 
@@ -70,7 +125,82 @@ function displayEachProduct(products) {
     });
 }
 
-//<button onclick="eliminarProducto(${productItem.id})">Eliminar</button>
+//---------------------ELIMINAR PRODUCTO-------------------------//
+
+// Funcion DELETE
+
+async function deleteProduct(id) {
+    try {
+        const response = await fetch(`${API_PRODUCTS}/${id}`, {
+        method: "DELETE",
+        });
+    
+        if (!response.ok) {
+        throw new Error("Request failure", response.status);
+        }
+    
+        console.log(response.status);
+    
+        const data = await response.json();
+        console.log("Deleted product", data);
+
+        //fetchProducts();
+        //llamamos a la funcion auxiliar para remover productos
+        removeProductFromDOM(id);
+        
+    } catch (error) {
+        console.error("Error deleting product:", error);
+    }
+}
+
+//Función AUX para la eliminación del producto del DOM y del CACHE
+
+function removeProductFromDOM(id) {
+    console.log(`Eliminando producto ID: ${id}`);
+
+    // Eliminar del DOM
+    const productElement = document.getElementById(`product-${id}`);//document.querySelector(`.product-card[data-id='${id}']`);
+    if (productElement) {
+        productElement.remove();
+        console.log("Producto eliminado del DOM");
+    }
+
+    // Eliminar del localStorage
+    const cachedData = localStorage.getItem(CACHE_KEY);
+
+    if (cachedData) {
+        let { timestamp, data } = JSON.parse(cachedData);
+
+        // Filtrar productos, quitando el que tiene el ID dado
+        const updatedData = data.filter(product => product.id !== id);
+
+        // Guardar la nueva lista en localStorage
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp, data: updatedData }));
+        console.log("Producto eliminado del caché");
+    }
+}
+
+//------------------- CREAR PRODUCTO ---------------------//
+
+
+// Función para restaurar caché
+function restaurarCache() {
+    console.log("Restaurando caché...");
+    localStorage.removeItem(CACHE_KEY); // Borra el caché
+    fetchProducts(); // Vuelve a cargar desde la API
+}
+
+// Agregar botón de restaurar caché
+document.addEventListener("DOMContentLoaded", () => {
+    fetchProducts();
+
+    const btnRestaurar = document.createElement("button");
+    btnRestaurar.textContent = "Restaurar Caché";
+    btnRestaurar.onclick = restaurarCache;
+    document.body.appendChild(btnRestaurar);
+});
+
+
 
 // Llamamos a la función al cargar la página
-obtenerProductos();
+document.addEventListener("DOMContentLoaded", () => fetchProducts());
